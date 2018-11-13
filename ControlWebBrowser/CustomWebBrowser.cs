@@ -120,6 +120,9 @@ namespace ControlWebBrowser
                                 //{
                                 webBrowser1.Navigate(txtCordinateUrl.Text);
                                 refreshCnt++;
+
+                                double waitTime = 7000 * modSpeed;
+                                System.Threading.Thread.Sleep((int)waitTime);
                                 //}
                             }
                         }
@@ -185,6 +188,7 @@ namespace ControlWebBrowser
         private void login()
         {
             txtLoginUser.Text = userPass[loopCnt];
+            txtUserCount.Text = loopCnt.ToString();
             if (txtCurrentUrl.Text == LOGINURL)
             {
                 currentUrl = webBrowser1.Url.ToString();

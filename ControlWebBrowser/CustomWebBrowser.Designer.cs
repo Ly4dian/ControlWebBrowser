@@ -51,7 +51,9 @@
             this.chkViewCount = new System.Windows.Forms.CheckBox();
             this.txtViewCount = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.txtUserCount = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLogin
@@ -180,7 +182,7 @@
             this.txtLoginUser.Location = new System.Drawing.Point(686, 61);
             this.txtLoginUser.Name = "txtLoginUser";
             this.txtLoginUser.ReadOnly = true;
-            this.txtLoginUser.Size = new System.Drawing.Size(120, 19);
+            this.txtLoginUser.Size = new System.Drawing.Size(80, 19);
             this.txtLoginUser.TabIndex = 13;
             // 
             // btnSearch
@@ -274,10 +276,19 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Lavender;
+            this.panel3.Controls.Add(this.txtUserCount);
             this.panel3.Location = new System.Drawing.Point(650, 53);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(162, 35);
             this.panel3.TabIndex = 19;
+            // 
+            // txtUserCount
+            // 
+            this.txtUserCount.Location = new System.Drawing.Point(122, 8);
+            this.txtUserCount.Name = "txtUserCount";
+            this.txtUserCount.ReadOnly = true;
+            this.txtUserCount.Size = new System.Drawing.Size(37, 19);
+            this.txtUserCount.TabIndex = 20;
             // 
             // ControlWebBrowser
             // 
@@ -309,6 +320,8 @@
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ControlWebBrowser_MouseDown);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,6 +351,7 @@
         private System.Windows.Forms.CheckBox chkViewCount;
         private System.Windows.Forms.TextBox txtViewCount;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox txtUserCount;
     }
 }
 
