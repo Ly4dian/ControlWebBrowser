@@ -20,11 +20,14 @@ namespace ControlWebBrowser
         private string currentUrl;
         private bool buttonClickedFlg = false;
         private bool waitFlg = false;
+        // 閲覧数盛るフラグ
+        private bool viewFlg = true;
         [DllImport("USER32.dll", CallingConvention = CallingConvention.StdCall)]
         static extern void SetCursorPos(int X, int Y);
         private int loopCnt = 0;
         private int loopF5 = 15;
         private double modSpeed = 1.0;
+        private int refreshCnt = 0;
         [DllImport("USER32.dll", CallingConvention = CallingConvention.StdCall)]
         static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
         private const int MOUSEEVENTF_MOVE = 0x0001;
@@ -50,18 +53,24 @@ namespace ControlWebBrowser
         //}
         private void InitializeForm()
         {
+            AppLog.Start();
             webBrowser1.ScriptErrorsSuppressed = true;
             rdoStandard.Checked = true;
             webBrowser1.Navigate(LOGINURL);
             // ログインユーザリストを読み込み
             ReadCsv();
-            
-
         }
         private void btnStart_Click(object sender, EventArgs e)
         {
             Point point = btnLogin.Parent.PointToScreen(btnLogin.Location);
             buttonClickedFlg = true;
+            // 必須入力確認
+            if (chkFav.Checked == false && chkGood.Checked == false && chkViewCount.Checked == false)
+            {
+                MessageBox.Show("Macroにて実行したい操作を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // 速度調整
             if (rdoSlow.Checked == true)
             {
                 modSpeed = 1.5;
@@ -89,7 +98,6 @@ namespace ControlWebBrowser
             int x = cp.X;
             //Y座標を取得する
             int y = cp.Y;
-
         }
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
@@ -99,23 +107,63 @@ namespace ControlWebBrowser
             // ターゲットのコーディネイトページの場合
             if (e.Url.ToString() == txtCordinateUrl.Text)
             {
-                ////SendKeys.Send("{F5}");
+                // 閲覧数分F5連打
+                if (viewFlg == true)
+                {
+                    if (!string.IsNullOrEmpty(txtViewCount.Text.ToString()))
+                    {
+                        if (refreshCnt < int.Parse(txtViewCount.Text.ToString()))
+                        {
+                            if (chkViewCount.Checked == true && !string.IsNullOrEmpty(txtViewCount.Text.ToString()))
+                            {
+                                //for (int cnt = 1; cnt < int.Parse(txtViewCount.Text.ToString()); cnt++)
+                                //{
+                                webBrowser1.Navigate(txtCordinateUrl.Text);
+                                refreshCnt++;
+                                //}
+                            }
+                        }
+                        else
+                        {
+                            favGood();
+                        }
+                    }
+                    else
+                    {
+                        viewFlg = false;
+                        favGood();
+                    }
+                }
                 //webBrowser1.Refresh();
                 // いいね・ファボクリック
-                favGood();
+                else
+                {
+                    favGood();
+                }
             }
             else if (e.Url.ToString() == LOGINURL)
             {
                 if (buttonClickedFlg == true)
                 {
+                    if (webBrowser1.Document.GetElementById("input_wearid").InnerText != null)
+                    {
+                        webBrowser1.Document.GetElementById("input_wearid").Focus();
+                        SendKeys.Send("{ENTER}");
+                    }
                     login();
+                    viewFlg = true;
                 }
+            }
+            else if(e.Url.ToString() == "about:blank")
+            {
+                // 待機
             }
             else
             {
                 // ターゲットのコーデページへ遷移
                 if (!string.IsNullOrEmpty(txtCordinateUrl.Text))
                 {
+                    // 複数回呼び出しされるため、一回目のみ実行
                     if (waitFlg == false)
                     {
                         webBrowser1.Navigate(txtCordinateUrl.Text);
@@ -131,7 +179,9 @@ namespace ControlWebBrowser
         {
             login();
         }
-
+        /// <summary>
+        /// ログイン処理
+        /// </summary>
         private void login()
         {
             txtLoginUser.Text = userPass[loopCnt];
@@ -147,6 +197,7 @@ namespace ControlWebBrowser
                 forms[0].Focus();
                 forms[0].Enabled = true;
                 forms[0].InnerText = txtLoginUser.Text;
+                webBrowser1.Document.GetElementById("input_wearid").Focus();
                 SendKeys.Send("{ENTER}");
                 loopCnt++;
                 waitFlg = false;
@@ -157,6 +208,9 @@ namespace ControlWebBrowser
         {
             favGood();
         }
+        /// <summary>
+        /// ファボ・いいね処理
+        /// </summary>
         private void favGood()
         {
             Point point = btnFavGood.Parent.PointToScreen(btnLogin.Location);
@@ -164,26 +218,37 @@ namespace ControlWebBrowser
             SetCursorPos(point.X + 200, point.Y + 200);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 100, -300, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, 100, -300, 0, 0);
-            ////一秒間（1000ミリ秒）停止する
-            //System.Threading.Thread.Sleep(modSpeed);
+
             // いいね・ファボまでスクロール
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -600, 0);
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -600, 0);
             double waitTime = 2000 * modSpeed;
             System.Threading.Thread.Sleep((int)waitTime);
-            // いいねクリック
-            SetCursorPos(point.X + 450, point.Y + 350);
-            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+
             // お気に入りクリック
-            SetCursorPos(point.X + 100, point.Y + 350);
-            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            waitTime = 10000 * modSpeed;
-            System.Threading.Thread.Sleep((int)waitTime); ;
+            if (chkGood.Checked)
+            {
+                SetCursorPos(point.X + 100, point.Y + 350);
+                mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
+            waitTime = 1000 * modSpeed;
+            System.Threading.Thread.Sleep((int)waitTime);
+            // いいねクリック
+            if (chkFav.Checked)
+            {
+                SetCursorPos(point.X + 450, point.Y + 350);
+                mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
+            waitTime = 9000 * modSpeed;
+            System.Threading.Thread.Sleep((int)waitTime);
             // ログイン画面へ戻る
             webBrowser1.Navigate(LOGINURL);
         }
+        /// <summary>
+        /// ユーザ情報をcsvファイルから取得
+        /// </summary>
         private void ReadCsv()
         {
             try

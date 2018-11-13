@@ -43,11 +43,14 @@
             this.txtLoginUser = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.chkGood = new System.Windows.Forms.CheckBox();
+            this.chkFav = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
+            this.chkViewCount = new System.Windows.Forms.CheckBox();
+            this.txtViewCount = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -174,7 +177,7 @@
             // 
             // txtLoginUser
             // 
-            this.txtLoginUser.Location = new System.Drawing.Point(692, 61);
+            this.txtLoginUser.Location = new System.Drawing.Point(686, 61);
             this.txtLoginUser.Name = "txtLoginUser";
             this.txtLoginUser.ReadOnly = true;
             this.txtLoginUser.Size = new System.Drawing.Size(120, 19);
@@ -195,31 +198,31 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(657, 64);
+            this.label4.Location = new System.Drawing.Point(656, 64);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 15;
             this.label4.Text = "User";
             // 
-            // checkBox1
+            // chkGood
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(47, 9);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(75, 16);
-            this.checkBox1.TabIndex = 16;
-            this.checkBox1.Text = "お気に入り";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chkGood.AutoSize = true;
+            this.chkGood.Location = new System.Drawing.Point(44, 9);
+            this.chkGood.Name = "chkGood";
+            this.chkGood.Size = new System.Drawing.Size(75, 16);
+            this.chkGood.TabIndex = 16;
+            this.chkGood.Text = "お気に入り";
+            this.chkGood.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // chkFav
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(128, 9);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(52, 16);
-            this.checkBox2.TabIndex = 17;
-            this.checkBox2.Text = "ふぁぼ";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.chkFav.AutoSize = true;
+            this.chkFav.Location = new System.Drawing.Point(117, 9);
+            this.chkFav.Name = "chkFav";
+            this.chkFav.Size = new System.Drawing.Size(52, 16);
+            this.chkFav.TabIndex = 17;
+            this.chkFav.Text = "ふぁぼ";
+            this.chkFav.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -232,12 +235,14 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Lavender;
-            this.panel2.Controls.Add(this.checkBox2);
+            this.panel2.Controls.Add(this.txtViewCount);
+            this.panel2.Controls.Add(this.chkViewCount);
+            this.panel2.Controls.Add(this.chkFav);
             this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.checkBox1);
-            this.panel2.Location = new System.Drawing.Point(186, 53);
+            this.panel2.Controls.Add(this.chkGood);
+            this.panel2.Location = new System.Drawing.Point(105, 53);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(196, 35);
+            this.panel2.Size = new System.Drawing.Size(284, 35);
             this.panel2.TabIndex = 19;
             // 
             // label5
@@ -248,6 +253,31 @@
             this.label5.Size = new System.Drawing.Size(36, 12);
             this.label5.TabIndex = 20;
             this.label5.Text = "Macro";
+            // 
+            // chkViewCount
+            // 
+            this.chkViewCount.AutoSize = true;
+            this.chkViewCount.Location = new System.Drawing.Point(167, 9);
+            this.chkViewCount.Name = "chkViewCount";
+            this.chkViewCount.Size = new System.Drawing.Size(60, 16);
+            this.chkViewCount.TabIndex = 21;
+            this.chkViewCount.Text = "閲覧数";
+            this.chkViewCount.UseVisualStyleBackColor = true;
+            // 
+            // txtViewCount
+            // 
+            this.txtViewCount.Location = new System.Drawing.Point(225, 6);
+            this.txtViewCount.Name = "txtViewCount";
+            this.txtViewCount.Size = new System.Drawing.Size(52, 19);
+            this.txtViewCount.TabIndex = 22;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Lavender;
+            this.panel3.Location = new System.Drawing.Point(650, 53);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(162, 35);
+            this.panel3.TabIndex = 19;
             // 
             // ControlWebBrowser
             // 
@@ -272,6 +302,7 @@
             this.Controls.Add(this.txtCurrentUrl);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel3);
             this.ForeColor = System.Drawing.SystemColors.WindowText;
             this.Name = "ControlWebBrowser";
             this.Text = "うぇありすたも忙しい";
@@ -299,11 +330,14 @@
         private System.Windows.Forms.TextBox txtLoginUser;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox chkGood;
+        private System.Windows.Forms.CheckBox chkFav;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox chkViewCount;
+        private System.Windows.Forms.TextBox txtViewCount;
+        private System.Windows.Forms.Panel panel3;
     }
 }
 

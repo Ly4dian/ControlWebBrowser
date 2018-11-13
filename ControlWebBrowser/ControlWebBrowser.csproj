@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppLog.cs" />
     <Compile Include="CustomWebBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
