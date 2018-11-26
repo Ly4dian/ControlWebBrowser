@@ -22,6 +22,8 @@ namespace ControlWebBrowser
         private bool waitFlg = false;
         // 閲覧数盛るフラグ
         private bool viewFlg = true;
+        // お気に入り・いいね実施フラグ
+        private bool flgFvGdCp = true;
         [DllImport("USER32.dll", CallingConvention = CallingConvention.StdCall)]
         static extern void SetCursorPos(int X, int Y);
         private int loopCnt = 0;
@@ -59,6 +61,10 @@ namespace ControlWebBrowser
             webBrowser1.Navigate(LOGINURL);
             // ログインユーザリストを読み込み
             ReadCsv();
+            chkFav.Checked = true;
+            chkGood.Checked = true;
+            chkViewCount.Checked = true;
+            txtViewCount.Text = "10";
         }
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -107,7 +113,11 @@ namespace ControlWebBrowser
             // ターゲットのコーディネイトページの場合
             if (e.Url.ToString() == txtCordinateUrl.Text)
             {
-                // 閲覧数分F5連打
+                if (flgFvGdCp == true)
+                {
+                    favGood();
+                }
+                // 閲覧数モリモリ
                 if (viewFlg == true)
                 {
                     if (!string.IsNullOrEmpty(txtViewCount.Text.ToString()))
@@ -116,19 +126,17 @@ namespace ControlWebBrowser
                         {
                             if (chkViewCount.Checked == true && !string.IsNullOrEmpty(txtViewCount.Text.ToString()))
                             {
-                                //for (int cnt = 1; cnt < int.Parse(txtViewCount.Text.ToString()); cnt++)
-                                //{
                                 webBrowser1.Navigate(txtCordinateUrl.Text);
                                 refreshCnt++;
 
-                                double waitTime = 7000 * modSpeed;
+                                double waitTime = 10000 * modSpeed;
                                 System.Threading.Thread.Sleep((int)waitTime);
-                                //}
                             }
                         }
                         else
                         {
-                            favGood();
+                            // ログイン画面へ戻る
+                            webBrowser1.Navigate(LOGINURL);
                         }
                     }
                     else
@@ -136,12 +144,6 @@ namespace ControlWebBrowser
                         viewFlg = false;
                         favGood();
                     }
-                }
-                //webBrowser1.Refresh();
-                // いいね・ファボクリック
-                else
-                {
-                    favGood();
                 }
             }
             else if (e.Url.ToString() == LOGINURL)
@@ -154,7 +156,6 @@ namespace ControlWebBrowser
                         SendKeys.Send("{ENTER}");
                     }
                     login();
-                    viewFlg = true;
                 }
             }
             else if(e.Url.ToString() == "about:blank")
@@ -205,6 +206,9 @@ namespace ControlWebBrowser
                 SendKeys.Send("{ENTER}");
                 loopCnt++;
                 waitFlg = false;
+                flgFvGdCp = true;
+                viewFlg = true;
+                refreshCnt = 0;
             }
         }
 
@@ -247,8 +251,7 @@ namespace ControlWebBrowser
             }
             waitTime = 9000 * modSpeed;
             System.Threading.Thread.Sleep((int)waitTime);
-            // ログイン画面へ戻る
-            webBrowser1.Navigate(LOGINURL);
+            flgFvGdCp = false;
         }
         /// <summary>
         /// ユーザ情報をcsvファイルから取得
